@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:pianta/Home/proyecto.dart';
 import 'package:pianta/Home/Home.dart';
 import 'package:pianta/Home/templates.dart';
@@ -186,6 +186,238 @@ class _NewProjectState extends State<NewProject> {
                   )
                 )
         ),
+        ),
+      ),
+    );
+  }
+}
+*/
+/*
+import 'package:flutter/material.dart';
+
+class NewCardScreen extends StatefulWidget {
+  @override
+  _NewCardScreenState createState() => _NewCardScreenState();
+}
+
+class _NewCardScreenState extends State<NewCardScreen> {
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Nueva Tarjeta'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Título',
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _contentController,
+              decoration: InputDecoration(
+                labelText: 'Contenido',
+              ),
+              maxLines: 10,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Guardar la tarjeta
+              },
+              child: Text('Guardar Tarjeta'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+ */
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+
+class CardModel {
+  String title;
+  String content;
+  DateTime createdAt;
+
+  CardModel({
+    required this.title,
+    required this.content,
+    required this.createdAt,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'content': content,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
+  factory CardModel.fromJson(Map<String, dynamic> json) {
+    return CardModel(
+      title: json['title'],
+      content: json['content'],
+      createdAt: DateTime.parse(json['createdAt']),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<CardModel> _cards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarCartas();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cartas'),
+      ),
+      body: ListView.builder(
+        itemCount: _cards.length,
+        itemBuilder: (context, index) {
+          final card = _cards[index];
+          return Card(
+            child: ListTile(
+              title: Text(card.title),
+              subtitle: Text(card.content),
+              trailing: Text(card.createdAt.toString()),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final newCard = await Navigator.push<CardModel>(
+            context,
+            MaterialPageRoute(builder: (context) => NewCardPage()),
+          );
+          if (newCard != null) {
+            setState(() {
+              _cards.add(newCard);
+            });
+            _guardarCartas();
+          }
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Future<void> _cargarCartas() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/cards.json');
+      final content = await file.readAsString();
+      final List<dynamic> jsonList = jsonDecode(content);
+      final List<CardModel> cards =
+          jsonList.map((json) => CardModel.fromJson(json)).toList();
+      setState(() {
+        _cards = cards;
+      });
+    } catch (e) {
+      print('Error al cargar las cartas: $e');
+    }
+  }
+
+  Future<void> _guardarCartas() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/cards.json');
+      final List<dynamic> jsonList =
+          _cards.map((card) => card.toJson()).toList();
+      final jsonString = jsonEncode(jsonList);
+      await file.writeAsString(jsonString);
+    } catch (e) {
+      print('Error al guardar las cartas: $e');
+    }
+  }
+}
+
+class NewCardPage extends StatefulWidget {
+  @override
+  _NewCardPageState createState() => _NewCardPageState();
+}
+
+class _NewCardPageState extends State<NewCardPage> {
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Nueva carta'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                hintText: 'Título',
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _contentController,
+              decoration: InputDecoration(
+                hintText: 'Contenido',
+              ),
+              maxLines: null,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                final title = _titleController.text;
+                final content = _contentController.text;
+                if (title.isNotEmpty && content.isNotEmpty) {
+                  final newCard = CardModel(
+                    title: title,
+                    content: content,
+                    createdAt: DateTime.now(),
+                  );
+                  Navigator.pop(context, newCard);
+                }
+              },
+              child: Text('Guardar'),
+            ),
+          ],
         ),
       ),
     );
