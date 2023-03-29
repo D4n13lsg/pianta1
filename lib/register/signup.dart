@@ -27,8 +27,7 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 300.0,
-                      height: 200.0,
+                      width: 350,
                     ),
                   ],
                 ),
@@ -58,31 +57,40 @@ class _SignUpState extends State<SignUp> {
                       ),
                       const SizedBox(height: 20.0),
                       //creacion un nuevo contraseña
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
                         children: const [
-                          Text(
-                            'Welcome! Fill in your email address and we will',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 19,
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'Welcome! Fill in your email address and we will',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 19,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      SizedBox(height: 10),
+                      Wrap(
+                        alignment: WrapAlignment.center,
                         children: const [
-                          Text(
-                            'send an account activation link.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 19,
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'send an account activation link.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 19,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
+                          ),
                         ],
                       ),
+
                       const SizedBox(height: 20.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -116,36 +124,35 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 20.0),
 
                       const SizedBox(height: 25.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_keyForm.currentState!.validate()) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const create_password1(),
-                                  ),
-                                );
-                              } else {
-                                print(
-                                    'An error has occurred, check your email or password');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(350, 70),
-                              backgroundColor: Color.fromRGBO(0, 191, 174, 1),
-                            ),
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontSize: 28,
-                              ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: double.infinity,
+                          minHeight: 50,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_keyForm.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const create_password1(),
+                                ),
+                              );
+                            } else {
+                              print(
+                                  'An error has occurred, check your email or password');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                          ),
+                          child: const Text(
+                            'Sign up',
+                            style: TextStyle(
+                              fontSize: 28,
                             ),
                           ),
-                        ],
+                        ),
                       ),
                       const SizedBox(height: 25.0),
                       Row(

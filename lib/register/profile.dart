@@ -28,8 +28,7 @@ class _profileState extends State<profile> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 300.0,
-                      height: 200.0,
+                      width: 350,
                     ),
                   ],
                 ),
@@ -60,14 +59,21 @@ class _profileState extends State<profile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text('Fill in information your personal data',
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'Fill in information your personal data',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22,
                               ),
-                              textAlign: TextAlign.center)
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(height: 10),
                         ],
                       ),
+
                       const SizedBox(height: 30.0),
                       //se pone el nombre de ususario a registar
                       Row(
@@ -102,52 +108,51 @@ class _profileState extends State<profile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const create_password(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(150, 50),
-                                backgroundColor:
-                                    Color.fromRGBO(255, 255, 255, 1)),
-                            child: const Text(
-                              'Back to password creation',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color.fromRGBO(122, 146, 233, 1)),
-                            ),
-                          ),
-                          const SizedBox(
-                            width:
-                                25, // Espacio de 16 píxeles entre los botones
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_keyForm.currentState!.validate()) {
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Home(),
+                                    builder: (context) => const create_password(),
                                   ),
                                 );
-                              } else {
-                                print(
-                                    'An error has occurred, check your email or password');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(150, 50),
-                              backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                onPrimary: const Color.fromRGBO(122, 146, 233, 1),
+                              ),
+                              child: const Text(
+                                'Back to password creation',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              'Done',
-                              style: TextStyle(
-                                fontSize: 28,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_keyForm.currentState!.validate()) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Home(),
+                                    ),
+                                  );
+                                } else {
+                                  print('An error has occurred, check your email or password');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: const Color.fromRGBO(0, 191, 174, 1),
+                              ),
+                              child: const Text(
+                                'Done',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                ),
                               ),
                             ),
                           ),

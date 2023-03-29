@@ -1,6 +1,8 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../Home/Home.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);
@@ -35,16 +37,149 @@ class MapSampleState extends State<MapSample> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
+        onPressed: () {
+          Navigator.pop(context, 'Valor enviado a la página anterior');
+        },
+        label: const Text('Salida'),
+        icon: const Icon(Icons.exit_to_app),
       ),
 
     );
   }
+}
+ */
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+/*import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+class GoogleMapWeb extends StatefulWidget {
+  const GoogleMapWeb({Key? key}) : super(key: key);
+
+  @override
+  _GoogleMapWebState createState() => _GoogleMapWebState();
+}
+
+class _GoogleMapWebState extends State<GoogleMapWeb> {
+  late InAppWebViewController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Google Maps Web'),
+      ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: Uri.parse(
+              'https://www.google.com/maps/embed/v1/place?key=<YOUR_API_KEY>&q=SPACE+Needle,Seattle+WA'),
+        ),
+        onWebViewCreated: (controller) {
+          _controller = controller;
+        },
+      ),
+    );
   }
 }
+ */
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class Mapa extends StatefulWidget {
+  const Mapa({Key? key}) : super(key: key);
+
+  @override
+  _MapaState createState() => _MapaState();
+}
+
+class _MapaState extends State<Mapa> {
+  Completer<GoogleMapController> _controller = Completer();
+  static const LatLng _center = const LatLng(45.521563, -122.677433);
+  final Set<Marker> _markers = {};
+
+  LatLng _lastMapPosition = _center;
+  MapType _currentMapType = MapType.normal;
+
+  void _onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+    _markers.add(
+      Marker(
+        markerId: MarkerId('value'),
+        position: _center,
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: InfoWindow(
+          title: 'Ubicación',
+          snippet: 'Esta es la ubicación',
+        ),
+      ),
+    );
+  }
+
+  void _onCameraMove(CameraPosition position) {
+    _lastMapPosition = position.target;
+  }
+
+  void _onMapTypeButtonPressed() {
+    setState(() {
+      _currentMapType =
+      _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+    });
+  }
+
+  void _onAddMarkerButtonPressed() {
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(_lastMapPosition.toString()),
+          position: _lastMapPosition,
+          icon: BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(
+            title: 'Marcador agregado',
+            snippet: 'Latitud:${_lastMapPosition.latitude}, Longitud:${_lastMapPosition.longitude}',
+          ),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: 11.0,
+            ),
+            mapType: _currentMapType,
+            markers: _markers,
+            onCameraMove: _onCameraMove,
+          ),
+          Positioned(
+            top: 20.0,
+            right: 15.0,
+            child: FloatingActionButton(
+              onPressed: _onMapTypeButtonPressed,
+              tooltip: 'Cambiar tipo de mapa',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.map),
+            ),
+          ),
+          Positioned(
+            bottom: 20.0,
+            right: 15.0,
+            child: FloatingActionButton(
+              onPressed: _onAddMarkerButtonPressed,
+              tooltip: 'Agregar marcador',
+              backgroundColor: Colors.red,
+              child: Icon(Icons.add_location),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

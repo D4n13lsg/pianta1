@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pianta/register/mensaje.dart';
 import 'package:pianta/register/profile.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -29,8 +30,7 @@ class _reset_passawordState extends State<reset_passaword> {
                       children: [
                         Image.asset(
                           'images/Logotipo_pianta.png',
-                          width: 300.0,
-                          height: 200.0,
+                          width: 350,
                         ),
                       ],
                     ),
@@ -58,15 +58,20 @@ class _reset_passawordState extends State<reset_passaword> {
                             ],
                           ),
                           const SizedBox(height: 20.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Wrap(
+                            alignment: WrapAlignment.center,
                             children: const [
-                              Text('Create a password which is hard to guess.',
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  'Create a password which is hard to guess.',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 22,
                                   ),
-                                  textAlign: TextAlign.center)
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 50.0),
@@ -187,7 +192,7 @@ class _reset_passawordState extends State<reset_passaword> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const profile(),
+                                        builder: (context) => const mensaje(),
                                       ),
                                     );
                                   } else {

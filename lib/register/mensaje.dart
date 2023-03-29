@@ -23,8 +23,7 @@ class _mensaje extends State<mensaje> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 300.0,
-                      height: 200.0,
+                      width: 350,
                     ),
                   ],
                 ),

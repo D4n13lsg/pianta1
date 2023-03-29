@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pianta/register/mensaje.dart';
 import 'package:pianta/register/profile.dart';
-
+import 'package:email_validator/email_validator.dart';
 import 'login.dart';
 
 class create_password extends StatefulWidget {
@@ -33,14 +33,13 @@ class _create_passwordState extends State<create_password> {
                       children: [
                         Image.asset(
                           'images/Logotipo_pianta.png',
-                          width: 300.0,
-                          height: 200.0,
+                          width: 350,
                         ),
                       ],
                     ),
                     Container(
-                      width: 450,
-                      height: 500,
+                      width: 500,
+                      height: 600,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.black26,
@@ -56,24 +55,29 @@ class _create_passwordState extends State<create_password> {
                               Text('Create Password',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 28,
+                                    fontSize: 20,
                                   ),
                                   textAlign: TextAlign.center)
                             ],
                           ),
-                          const SizedBox(height: 20.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          const SizedBox(height: 10.0),
+                          Wrap(
+                            alignment: WrapAlignment.center,
                             children: const [
-                              Text('Create a password which is hard to guess.',
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  'Create a password which is hard to guess.',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 22,
                                   ),
-                                  textAlign: TextAlign.center)
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 30.0),
+                          const SizedBox(height: 2.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: const [
@@ -90,9 +94,10 @@ class _create_passwordState extends State<create_password> {
                           TextFormField(
                             controller: password,
                             validator: (valor) {
-                              if (valor!.isEmpty ) {
+                              if (valor!.isEmpty) {
                                 return 'please entrer passowrd';
-                              }if(valor!.length < 8){
+                              }
+                              if (valor!.length < 8) {
                                 return 'la contrasena tiene que tener almenos 8 caracteres ';
                               }else if( valor?.trim()?.isEmpty ?? true){
                                 return 'your password must have digits';
@@ -114,7 +119,7 @@ class _create_passwordState extends State<create_password> {
                                 )),
                             obscureText: _showPassword == false ? true : false,
                           ),
-                          const SizedBox(height: 25.0),
+                          const SizedBox(height: 10.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: const [
@@ -161,52 +166,57 @@ class _create_passwordState extends State<create_password> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Login(),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(200, 50),
-                                    backgroundColor:
-                                    Color.fromRGBO(255, 255, 255, 1)),
-                                child: const Text(
-                                  'LOG IN',
-                                  style: TextStyle(
-                                      fontSize: 28,
-                                      color: Color.fromRGBO(122, 146, 233, 1)),
-                                ),
-                              ),
-                              const SizedBox(
-                                width:
-                                25, // Espacio de 16 píxeles entre los botones
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_keyForm.currentState!.validate()) {
+                              Flexible(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const mensaje(),
+                                        builder: (context) => const Login(),
                                       ),
                                     );
-                                  } else {
-                                    print(
-                                        'An error has occurred, check your email or password');
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(200, 50),
-                                  backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(200, 50),
+                                    backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                                  ),
+                                  child: const Text(
+                                    'LOG IN',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      color: Color.fromRGBO(122, 146, 233, 1),
+                                    ),
+                                  ),
                                 ),
-                                child: const Text(
-                                  'Next',
-                                  style: TextStyle(
-                                    fontSize: 28,
+                              ),
+                              const SizedBox(
+                                width: 25,
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_keyForm.currentState!.validate()) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const profile(),
+                                        ),
+                                      );
+                                    } else {
+                                      print('An error has occurred, check your email or password');
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(200, 50),
+                                    backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                                  ),
+                                  child: const Text(
+                                    'Next',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                    ),
                                   ),
                                 ),
                               ),

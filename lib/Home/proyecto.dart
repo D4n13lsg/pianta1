@@ -185,190 +185,31 @@ class _NewCardPageState extends State<NewCardPage> {
   }
 }
  */
-
-
-/*@override
-Widget build(BuildContext context) {
-  return Scaffold(
-
-    //se tomara una columna Para el resto de la pantalla a parte de la navbar llamada en (Home)
-      body: Column(
-        children: [
-          //1° modulo ubicacion del texto
-          //se tomara una fila para ubicar el texto centrado como se desea
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //texto inicial de la pagina
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Projects',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                ),
-              ), //fin modulo
-              const SizedBox(height: 35),
-              // 2° Modulo del boton projecto creado y boton de new project
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  //creacion primer boton
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProjectCreated(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(90, 35),
-                        backgroundColor: const Color.fromRGBO(
-                            255, 255, 255, 1)),
-                    child: const Text(
-                      'Project Created',
-                      style: TextStyle(
-                          fontSize: 13, color: Color.fromRGBO(16, 16, 16, 1)),
-                    ),
-                  ),
-                  //caja para poner un espacio
-                  const SizedBox(width: 20),
-                  //segundo boton
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(70, 35),
-                      backgroundColor: const Color.fromRGBO(0, 191, 174, 1),
-                    ),
-                    //texto del segundo boton
-                    child: const Text(
-                      '+New Project',
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20)
-                ],
-              ),
-            ],
-          ),
-          //cierre modulo 2°
-
-          //Modulo 3° linea divisoria
-          //linea divisoria para separar la informacion inicial de una pequeña seccion y el resto
-          //de la pagina donde se hallaran los proyectos creados
-          const Divider(
-            color: Colors.black26,
-            //color of divider
-            height: 2,
-            //height spacing of divider
-            thickness: 1,
-            //thickness of divier line
-            indent: 15,
-            //spacing at the start of divider
-            endIndent: 0, //spacing at the end of divider
-          ),
-
-
-          //Modulo 4° las Card de proyectos guardados
-          //se tomara una fila para poder ubicar la card donde queremos
-          /*Row(
-            mainAxisAlignment: MainAxisAlignment.start, children: [
-          //espacio de margen paar la card
-          Padding(
-            padding: const EdgeInsets.all(19.0),
-            child: SizedBox(
-              //dimensiones de la card en general
-              width: 260,
-              height: 300,
-              child: Card(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: 260,
-                        height: 350,
-                        color: Colors.white, // color de la primera mitad
-                      ),
-                    ),
-                    Container(
-                        color: const Color.fromRGBO(0, 191, 174, 1),
-                        child: ListTile(
-                          leading: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DeleteProject()),
-                                ); // Acción cuando se presione el botón
-                              },
-                              child: const Icon(Icons.delete,
-                                  size: 30, color: Colors.black)),
-                          title: const Text('Projects Name',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 30)),
-                          trailing: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  //accion que le permitira llevar a la ppagina deseada con el click
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ShareProject()),
-                                ); // Acción cuando se presione el botón
-                              },
-                              child: const Icon(Icons.share,
-                                  size: 30, color: Colors.black)),
-                        ) // color de la segunda mitad
-                        ),
-                  ],
-                ),
-              ),
-            ),
-          )
-
-        ]),
-         */
-        ],
-      ));
-}
-
- */
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-
-
+import 'package:pianta/Funciones/constantes.dart';
+import 'dart:convert';
+import 'package:pianta/Home/project_created.dart';
+import 'package:pianta/maps/maps2.dart';
+import '../Funciones/delete_project.dart';
+import '../Funciones/share_project.dart';
+import '../maps/maps.dart';
+import 'Home.dart';
 
 class CardModel {
   String title;
   String content;
-  DateTime createdAt;
 
   CardModel({
     required this.title,
     required this.content,
-    required this.createdAt,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
       'content': content,
-      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -376,7 +217,6 @@ class CardModel {
     return CardModel(
       title: json['title'],
       content: json['content'],
-      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }
@@ -398,15 +238,76 @@ class _ProyectosState extends State<Proyectos> {
     _cargarCartas();
   }
 
+  void _eliminarCarta(int index) {
+    setState(() {
+      _cards.removeAt(index);
+    });
+    _guardarCartas();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cartas'),
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Divider(
+            color: Colors.black26, //color of divider
+            height: 4, //height spacing of divider
+            thickness: 1, //thickness of divier line
+            indent: 15, //spacing at the start of divider
+            endIndent: 0,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent, // establecer el fondo transparente
+        elevation: 0,
+        title: const Text(
+          'Proyecto',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black),
+        ),
         actions: [
-
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final newCard = await Navigator.push<CardModel>(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProjectCreated()),
+                  );
+                  if (newCard != null) {
+                    setState(() {
+                      _cards.add(newCard);
+                    });
+                    _guardarCartas();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    primary: Color.fromRGBO(255, 255, 255, 1.0)),
+                child: Row(
+                  children: const [
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Proyecto Create",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
           Row(
             children: [
               ElevatedButton(
@@ -423,24 +324,21 @@ class _ProyectosState extends State<Proyectos> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  primary: Colors.green, // Agregar color
-                ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    primary: Color.fromRGBO(0, 191, 174, 1)),
                 child: Row(
                   children: const [
-
                     SizedBox(
-                      width: 10,
+                      width: 5,
                     ),
                     Text(
                       "+New Project",
                       style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontSize: 15,
                       ),
                     ),
                   ],
@@ -449,37 +347,99 @@ class _ProyectosState extends State<Proyectos> {
               const SizedBox(width: 10),
             ],
           ),
-
-
         ],
       ),
-      body: ListView.builder(
-        itemCount: _cards.length,
-        itemBuilder: (context, index) {
-          final card = _cards[index];
-          return Card(
-            child: ListTile(
-              title: Text(card.title),
-              subtitle: Text(card.content),
-              trailing: Text(card.createdAt.toString()),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newCard = await Navigator.push<CardModel>(
-            context,
-            MaterialPageRoute(builder: (context) => NewCardPage()),
-          );
-          if (newCard != null) {
-            setState(() {
-              _cards.add(newCard);
-            });
-            _guardarCartas();
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          final height = constraints.maxHeight;
+
+          // Si el ancho de la pantalla es menor o igual a 600,
+          // mostrar 2 columnas en el GridView
+          if (width <= 600) {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: _cards.length,
+              itemBuilder: (context, index) {
+                final card = _cards[index];
+                return Card(
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    child: ListTile(
+                      title: Text(card.title),
+                      subtitle: Text(card.content),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+          // Si el ancho de la pantalla es mayor que 600,
+          // mostrar 5 columnas en el GridView
+          else {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: _cards.length,
+              itemBuilder: (context, index) {
+                final card = _cards[index];
+                //esto funciona para la creacion de cards
+                return Card(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text(card.title),
+                          subtitle: Text(card.content),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _eliminarCarta(index);
+                              //este showDialog funciona para que aparesca como alerta
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DeleteProject();
+                                },
+                              );
+                            },
+                          ),
+
+                          Spacer(),
+                          IconButton(
+                            icon: Icon(Icons.share),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ShareProject();
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
           }
         },
-        child: Icon(Icons.add),
       ),
     );
   }
@@ -491,7 +451,7 @@ class _ProyectosState extends State<Proyectos> {
       final content = await file.readAsString();
       final List<dynamic> jsonList = jsonDecode(content);
       final List<CardModel> cards =
-      jsonList.map((json) => CardModel.fromJson(json)).toList();
+          jsonList.map((json) => CardModel.fromJson(json)).toList();
       setState(() {
         _cards = cards;
       });
@@ -505,7 +465,7 @@ class _ProyectosState extends State<Proyectos> {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/cards.json');
       final List<dynamic> jsonList =
-      _cards.map((card) => card.toJson()).toList();
+          _cards.map((card) => card.toJson()).toList();
       final jsonString = jsonEncode(jsonList);
       await file.writeAsString(jsonString);
     } catch (e) {
@@ -527,108 +487,153 @@ class _NewCardPageState extends State<NewCardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Create new project',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'NAME',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese un título';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _title = value!;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      labelText: 'DESCRIPTION',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese contenido';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _content = value!;
-                    },
-                  ),
-                  TextFormField(
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      labelText: 'LOCATION',
-                      border: OutlineInputBorder(),
-                    ),
-
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        backgroundColor: Colors.grey[200],
+        body: Center(
+          child: Card(
+            elevation: 8.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            margin: EdgeInsets.all(50.0),
+            child: SizedBox(
+              width: 900,
+              height: 450,
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Acción del botón "Cancelar"
-                        },
-                        child: Text('Cancelar'),
+                      const Text(
+                        'Create new project',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(width: 16),
-                      Spacer(),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            final newCard = CardModel(
-                              title: _title,
-                              content: _content,
-                              createdAt: DateTime.now(),
-                            );
-                            Navigator.pop(context, newCard);
+                      const SizedBox(height: 16),
+                      const Text(
+                        'NAME',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese un título';
                           }
+                          return null;
                         },
-                        child: Text('Guardar'),
+                        onSaved: (value) {
+                          _title = value!;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'DESCRIPTION',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese contenido';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _content = value!;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'LOCATION',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Mapa(),
+                                ),
+                              ); // Acción del botón "Location"
+                            },
+                            icon: Icon(Icons.location_on), // Icono del botón
+                            label: Text('Location'),
+                            style: ElevatedButton.styleFrom(
+                                primary: const Color.fromRGBO(
+                                    0, 191, 174, 1) // Color de fondo del botón
+                                ), // Texto del botón
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                ),
+                              ); // Acción del botón "Cancelar"
+                            },
+                            child: Text('Cancelar'),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color.fromRGBO(
+                                    0, 191, 174, 1) // Color de fondo del botón
+                                ), //
+                          ),
+                          const SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                final newCard = CardModel(
+                                  title: _title,
+                                  content: _content,
+                                );
+                                Navigator.pop(context, newCard);
+                              }
+                            },
+                            child: Text('Guardar'),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color.fromRGBO(
+                                    0, 191, 174, 1) // Color de fondo del botón
+                                ), //
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-
-
-
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
-
-
-
-
-
-
-

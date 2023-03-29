@@ -33,8 +33,7 @@ class _create_passwordState1 extends State<create_password1> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 300.0,
-                      height: 200.0,
+                      width: 350,
                     ),
                   ],
                 ),
@@ -62,15 +61,20 @@ class _create_passwordState1 extends State<create_password1> {
                         ],
                       ),
                       const SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
                         children: const [
-                          Text('Create a password which is hard to guess.',
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'Create a password which is hard to guess.',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 22,
                               ),
-                              textAlign: TextAlign.center)
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 2.0),
@@ -162,52 +166,57 @@ class _create_passwordState1 extends State<create_password1> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Login(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(200, 50),
-                                backgroundColor:
-                                    Color.fromRGBO(255, 255, 255, 1)),
-                            child: const Text(
-                              'LOG IN',
-                              style: TextStyle(
-                                  fontSize: 28,
-                                  color: Color.fromRGBO(122, 146, 233, 1)),
-                            ),
-                          ),
-                          const SizedBox(
-                            width:
-                                25, // Espacio de 16 píxeles entre los botones
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_keyForm.currentState!.validate()) {
+                          Flexible(
+                            flex: 1,
+                            child: ElevatedButton(
+                              onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const profile(),
+                                    builder: (context) => const Login(),
                                   ),
                                 );
-                              } else {
-                                print(
-                                    'An error has occurred, check your email or password');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(200, 50),
-                              backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(200, 50),
+                                backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                              ),
+                              child: const Text(
+                                'LOG IN',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  color: Color.fromRGBO(122, 146, 233, 1),
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              'Next',
-                              style: TextStyle(
-                                fontSize: 28,
+                          ),
+                          const SizedBox(
+                            width: 25,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_keyForm.currentState!.validate()) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const profile(),
+                                    ),
+                                  );
+                                } else {
+                                  print('An error has occurred, check your email or password');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(200, 50),
+                                backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                              ),
+                              child: const Text(
+                                'Next',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                ),
                               ),
                             ),
                           ),

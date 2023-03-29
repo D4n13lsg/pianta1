@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:pianta/Home/settings.dart';
 import 'package:pianta/Home/templates.dart';
 import 'package:pianta/register/login.dart';
@@ -108,6 +108,96 @@ class logo extends StatelessWidget {
   }
 }
 //variable que contiene la clase y los metodos que tendra la bara de navegación para llamarla en otras clases
+var myNav = const Navigation(title: 'Barra de Navegación');
+ */
+import 'package:flutter/material.dart';
+import 'package:pianta/Home/settings.dart';
+import 'package:pianta/Home/templates.dart';
+import 'package:pianta/Home/proyecto.dart';
+
+var myDefaultBackground = Colors.white;
+
+// clase creada unicamente para la barra de navegacion
+class Navigation extends StatefulWidget {
+  const Navigation({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _NavigationState createState() => _NavigationState();
+}
+
+class _NavigationState extends State<Navigation> {
+  // variable int para instanciar la seleccion de las paginas a navegar
+  int _selectedIndex = 0;
+  List<IconData> icons = [    Icons.search,    Icons.more_horiz,    Icons.settings_outlined  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 100,
+            child: Column(
+              children: [
+                // Contenedor de la imagen
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/Icon.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                // ListView con los iconos
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: icons.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          height: 100,
+                          color: _selectedIndex == index
+                              ? const Color.fromRGBO(0, 191, 174, 1)
+                              : Colors.transparent,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 20.0),
+                              Icon(
+                                icons[index],
+                                size: 50.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: IndexedStack(
+              index: _selectedIndex,
+              children: const [Proyectos(), Templates(), Settings()],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+// variable que contiene la clase y los metodos que tendra la barra de navegación para llamarla en otras clases
 var myNav = const Navigation(title: 'Barra de Navegación');
 
 

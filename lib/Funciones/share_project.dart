@@ -19,19 +19,15 @@ class _ShareProjectState extends State<ShareProject> {
 
         ElevatedButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Home(),
-              ),
-            );
+            Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(100, 30),
             backgroundColor: const Color.fromRGBO(0, 191, 174, 1),
           ),
           child: const Text(
-            'Save',textAlign: TextAlign.center,
+            'Save',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 12,
@@ -39,7 +35,6 @@ class _ShareProjectState extends State<ShareProject> {
             ),
           ),
         ),
-
       ],
     );
   }

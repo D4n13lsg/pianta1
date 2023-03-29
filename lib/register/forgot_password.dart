@@ -30,8 +30,7 @@ class _forgot_passwordState extends State<forgot_password> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 300.0,
-                      height: 200.0,
+                      width: 350,
                     ),
                   ],
                 ),
@@ -60,29 +59,32 @@ class _forgot_passwordState extends State<forgot_password> {
                         ],
                       ),
                       const SizedBox(height: 20.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
                         children: const [
-                          Text(
-                            'It happens sometimes, no worries. We will send ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 19,
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'It happens sometimes, no worries. We will send ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 19,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'you an email with the link to reset password',
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 19,
+                          ),
+                          SizedBox(height: 10),
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              'you an email with the link to reset password',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 19,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20.0),
@@ -115,9 +117,9 @@ class _forgot_passwordState extends State<forgot_password> {
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      const SizedBox(height: 20.0),
-                      const SizedBox(height: 25.0),
-                      Row(
+                      const SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
+                      /*Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
@@ -148,7 +150,39 @@ class _forgot_passwordState extends State<forgot_password> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 25.0),
+
+                       */
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: double.infinity,
+                          minHeight: 50,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_keyForm.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const reset_passaword(),
+                                ),
+                              );
+                            } else {
+                              print(
+                                  'An error has occurred, check your email or password');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                          ),
+                          child: const Text(
+                            'Submit',
+                            style: TextStyle(
+                              fontSize: 28,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30.0),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

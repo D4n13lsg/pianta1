@@ -31,7 +31,8 @@ class _LoginState extends State<Login> {
                   children: [
                     Image.asset(
                       'images/Logotipo_pianta.png',
-                      width: 410,
+                      fit: BoxFit.cover,
+                      width: 350,
                     ),
                   ],
                 ),
@@ -111,7 +112,7 @@ class _LoginState extends State<Login> {
                             return 'A password is required to log in';
                           } else if (valor!.length < 8) {
                             return 'your password is too short it must have at least 8 characters';
-                          }else if( valor?.trim()?.isEmpty ?? true){
+                          } else if (valor?.trim()?.isEmpty ?? true) {
                             return 'your password must have digits';
                           }
                           return null;
@@ -159,7 +160,7 @@ class _LoginState extends State<Login> {
                           ]),
                       const SizedBox(height: 25.0),
                       //boton para iniciar proyecto
-                      Row(
+                      /*Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
@@ -188,6 +189,38 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ],
+                      ),
+
+                       */
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: double.infinity,
+                          minHeight: 70,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_keyForm.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Home(),
+                                ),
+                              );
+                            } else {
+                              print(
+                                  'An error has occurred, check your email or password');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(0, 191, 174, 1),
+                          ),
+                          child: const Text(
+                            'LOG IN',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
                       ),
 
                       const SizedBox(height: 25.0),
