@@ -237,7 +237,7 @@ class _ProyectosState extends State<Proyectos> {
     super.initState();
     _cargarCartas();
   }
-
+//eliminar card
   void _eliminarCarta(int index) {
     String title = _cards[index].title;
     showDialog(

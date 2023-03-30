@@ -209,7 +209,7 @@ class MapScreen extends StatelessWidget {
                   'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
               additionalOptions: const {
                 'accessToken': MAPBOX_ACCESS_TOKEN,
-                'id': 'mapbox/streets-v12'
+                'id': 'mapbox/satellite-v9'
               },
             ),
             MarkerLayer(
