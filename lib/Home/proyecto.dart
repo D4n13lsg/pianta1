@@ -416,20 +416,49 @@ class _ProyectosState extends State<Proyectos> {
           if (width <= 600) {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 5,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               itemCount: _cards.length,
               itemBuilder: (context, index) {
                 final card = _cards[index];
-                return Card(
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    child: ListTile(
-                      title: Text(card.title),
-                      subtitle: Text(card.content),
+                //esto funciona para la creacion de cards
+                Container(
+                  color: Colors.blue,
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            title: Text(card.title),
+                            subtitle: Text(card.content),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _eliminarCarta(index);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.share),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ShareProject();
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -455,8 +484,13 @@ class _ProyectosState extends State<Proyectos> {
                     children: [
                       Expanded(
                         child: ListTile(
-                          title: Text(card.title),
-                          subtitle: Text(card.content),
+                          title: Text(
+                            card.title,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       Row(
@@ -600,10 +634,17 @@ class _NewCardPageState extends State<NewCardPage> {
                         maxLines: null,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
                         ),
+                        textAlign: TextAlign.left,
+                        textAlignVertical: TextAlignVertical.top,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese contenido';
+                            return 'Please enter content';
                           }
                           return null;
                         },

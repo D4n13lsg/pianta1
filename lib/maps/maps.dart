@@ -212,22 +212,6 @@ class MapScreen extends StatelessWidget {
                 'id': 'mapbox/satellite-v9'
               },
             ),
-            MarkerLayer(
-              markers: [
-                Marker(
-                  point: myPosition,
-                  builder: (context) {
-                    return Container(
-                      child: const Icon(
-                        Icons.person_pin,
-                        color: Colors.blueAccent,
-                        size: 40,
-                      ),
-                    );
-                  },
-                )
-              ],
-            )
           ],
         ),
       ),
