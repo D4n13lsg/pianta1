@@ -239,10 +239,67 @@ class _ProyectosState extends State<Proyectos> {
   }
 
   void _eliminarCarta(int index) {
-    setState(() {
-      _cards.removeAt(index);
-    });
-    _guardarCartas();
+    String title = _cards[index].title;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Do you want to delete this project?"),
+          content: Text(
+            "$title",
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _cards.removeAt(index);
+                    });
+                    _guardarCartas();
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(100, 30),
+                    backgroundColor: const Color.fromRGBO(242, 23, 23, 1),
+                  ),
+                  child: const Text(
+                    'Delete',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(100, 30),
+                    backgroundColor: const Color.fromRGBO(0, 191, 174, 1),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -410,15 +467,8 @@ class _ProyectosState extends State<Proyectos> {
                             onPressed: () {
                               _eliminarCarta(index);
                               //este showDialog funciona para que aparesca como alerta
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DeleteProject();
-                                },
-                              );
                             },
                           ),
-
                           Spacer(),
                           IconButton(
                             icon: Icon(Icons.share),
@@ -483,25 +533,27 @@ class _NewCardPageState extends State<NewCardPage> {
   final _formKey = GlobalKey<FormState>();
   late String _title;
   late String _content;
-
+//creacion de la card
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: Center(
-          child: Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            margin: EdgeInsets.all(50.0),
-            child: SizedBox(
-              width: 900,
-              height: 450,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formKey,
+      backgroundColor: Colors.grey[200],
+      body: Center(
+        child: Card(
+          elevation: 8.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: EdgeInsets.all(30.0),
+          child: Padding(
+            padding: EdgeInsets.all(30.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 900,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -576,7 +628,7 @@ class _NewCardPageState extends State<NewCardPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Mapa(),
+                                  builder: (context) => const MapScreen(),
                                 ),
                               ); // Acción del botón "Location"
                             },
@@ -624,7 +676,7 @@ class _NewCardPageState extends State<NewCardPage> {
                             style: ElevatedButton.styleFrom(
                                 primary: Color.fromRGBO(
                                     0, 191, 174, 1) // Color de fondo del botón
-                                ), //
+                                ),
                           ),
                         ],
                       ),
@@ -634,6 +686,8 @@ class _NewCardPageState extends State<NewCardPage> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

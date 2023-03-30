@@ -81,105 +81,156 @@ class _GoogleMapWebState extends State<GoogleMapWeb> {
   }
 }
  */
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Mapa extends StatefulWidget {
-  const Mapa({Key? key}) : super(key: key);
+/*import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
-  @override
-  _MapaState createState() => _MapaState();
-}
 
-class _MapaState extends State<Mapa> {
-  Completer<GoogleMapController> _controller = Completer();
-  static const LatLng _center = const LatLng(45.521563, -122.677433);
-  final Set<Marker> _markers = {};
 
-  LatLng _lastMapPosition = _center;
-  MapType _currentMapType = MapType.normal;
+// ignore: constant_identifier_names
+const MAPBOX_ACCESS_TOKEN =
+    'pk.eyJ1IjoiZGFuaWVsc2cxOCIsImEiOiJjbGZ1N3F6ZWcwNDByM2Vtamo1OTNoc3hrIn0.5dFY3xEDB7oLtMbCWDdW9A';
 
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-    _markers.add(
-      Marker(
-        markerId: MarkerId('value'),
-        position: _center,
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(
-          title: 'Ubicación',
-          snippet: 'Esta es la ubicación',
-        ),
-      ),
-    );
-  }
+final myPosition = LatLng(40.697488, -73.979681);
 
-  void _onCameraMove(CameraPosition position) {
-    _lastMapPosition = position.target;
-  }
-
-  void _onMapTypeButtonPressed() {
-    setState(() {
-      _currentMapType =
-      _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
-    });
-  }
-
-  void _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId(_lastMapPosition.toString()),
-          position: _lastMapPosition,
-          icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(
-            title: 'Marcador agregado',
-            snippet: 'Latitud:${_lastMapPosition.latitude}, Longitud:${_lastMapPosition.longitude}',
-          ),
-        ),
-      );
-    });
-  }
+class MapScreen extends StatelessWidget {
+  const MapScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 11.0,
-            ),
-            mapType: _currentMapType,
-            markers: _markers,
-            onCameraMove: _onCameraMove,
+      appBar: AppBar(
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Divider(
+            color: Colors.black26, //color of divider
+            height: 4, //height spacing of divider
+            thickness: 1, //thickness of divier line
+            indent: 15, //spacing at the start of divider
+            endIndent: 0,
           ),
-          Positioned(
-            top: 20.0,
-            right: 15.0,
-            child: FloatingActionButton(
-              onPressed: _onMapTypeButtonPressed,
-              tooltip: 'Cambiar tipo de mapa',
-              backgroundColor: Colors.green,
-              child: Icon(Icons.map),
-            ),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent, // establecer el fondo transparente
+        elevation: 0,
+        title: const Text(
+          'Location',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black),
+        ),
+      ),
+      body: FlutterMap(
+        options:
+        MapOptions(center: myPosition, minZoom: 5, maxZoom: 25, zoom: 18),
+        nonRotatedChildren: [
+          TileLayer(
+            urlTemplate:
+            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+            additionalOptions: const {
+              'accessToken': MAPBOX_ACCESS_TOKEN,
+              'id': 'mapbox/satellite-v9'
+            },
           ),
-          Positioned(
-            bottom: 20.0,
-            right: 15.0,
-            child: FloatingActionButton(
-              onPressed: _onAddMarkerButtonPressed,
-              tooltip: 'Agregar marcador',
-              backgroundColor: Colors.red,
-              child: Icon(Icons.add_location),
-            ),
-          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: myPosition,
+                builder: (context) {
+                  return Container(
+                    child: const Icon(
+                      Icons.person_pin,
+                      color: Colors.blueAccent,
+                      size: 40,
+                    ),
+                  );
+                },
+              )
+            ],
+          )
         ],
       ),
     );
   }
 }
+ */
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
+// ignore: constant_identifier_names
+const MAPBOX_ACCESS_TOKEN =
+    'pk.eyJ1IjoiZGFuaWVsc2cxOCIsImEiOiJjbGZ1N3F6ZWcwNDByM2Vtamo1OTNoc3hrIn0.5dFY3xEDB7oLtMbCWDdW9A';
+
+final myPosition = LatLng(40.697488, -73.979681);
+
+class MapScreen extends StatelessWidget {
+  const MapScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Divider(
+            color: Colors.black26, //color of divider
+            height: 4, //height spacing of divider
+            thickness: 1, //thickness of divier line
+            indent: 15, //spacing at the start of divider
+            endIndent: 0,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent, // establecer el fondo transparente
+        elevation: 0,
+        title: const Text(
+          'Location',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pop(context, 'Valor enviado a la página anterior');
+        },
+        label: const Text('Salida'),
+        icon: const Icon(Icons.exit_to_app),
+      ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: FlutterMap(
+          options:
+              MapOptions(center: myPosition, minZoom: 5, maxZoom: 25, zoom: 18),
+          nonRotatedChildren: [
+            TileLayer(
+              urlTemplate:
+                  'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+              additionalOptions: const {
+                'accessToken': MAPBOX_ACCESS_TOKEN,
+                'id': 'mapbox/streets-v12'
+              },
+            ),
+            MarkerLayer(
+              markers: [
+                Marker(
+                  point: myPosition,
+                  builder: (context) {
+                    return Container(
+                      child: const Icon(
+                        Icons.person_pin,
+                        color: Colors.blueAccent,
+                        size: 40,
+                      ),
+                    );
+                  },
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
