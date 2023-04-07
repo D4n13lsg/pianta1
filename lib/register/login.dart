@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pianta/register/forgot_password.dart';
 import 'package:pianta/register/signup.dart';
+
+
 import 'package:pianta/Home/Home.dart';
-import 'package:email_validator/email_validator.dart';
+
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -203,7 +205,7 @@ class _LoginState extends State<Login> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Home(),
+                                  builder: (context) => Home(),
                                 ),
                               );
                             } else {

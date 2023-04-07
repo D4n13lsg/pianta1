@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pianta/Home/Home.dart';
 import 'package:pianta/Home/proyecto.dart';
 
-class DeleteProject extends StatefulWidget {
+
+
+/*class DeleteProject extends StatefulWidget {
   const DeleteProject({Key? key}) : super(key: key);
 
   @override
   State<DeleteProject> createState() => _DeleteProjectState();
 }
-
 class _DeleteProjectState extends State<DeleteProject> {
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -70,3 +72,5 @@ class _DeleteProjectState extends State<DeleteProject> {
     );
   }
 }
+ */
+

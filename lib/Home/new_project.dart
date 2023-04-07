@@ -244,7 +244,7 @@ class _NewCardScreenState extends State<NewCardScreen> {
 }
  */
 
-import 'dart:convert';
+/*import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -421,5 +421,191 @@ class _NewCardPageState extends State<NewCardPage> {
         ),
       ),
     );
+  }
+}
+ */
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class Project {
+  String name;
+  String location;
+  String description;
+
+  Project({
+    required this.name,
+    required this.location,
+    required this.description,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'location': location,
+      'description': description,
+    };
+  }
+}
+
+class AddProjectScreen extends StatefulWidget {
+  const AddProjectScreen({Key? key}) : super(key: key);
+
+  @override
+  _AddProjectScreenState createState() => _AddProjectScreenState();
+}
+
+class _AddProjectScreenState extends State<AddProjectScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _locationController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _addProject(Project project) async {
+    final url = Uri.parse('http://127.0.0.1:8000/user/project/');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(project.toMap());
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 201) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al agregar el proyecto'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Align(
+            alignment: Alignment.center,
+            child: FractionallySizedBox(
+                heightFactor: 0.79,
+                widthFactor: 0.8,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Nombre',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextFormField(
+                            maxLines: null,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            textAlign: TextAlign.left,
+                            textAlignVertical: TextAlignVertical.top,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter content';
+                              }
+                              return null;
+                            },
+                            controller: _nameController,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Localizacion',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextFormField(
+                            maxLines: null,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            textAlign: TextAlign.left,
+                            textAlignVertical: TextAlignVertical.top,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter content';
+                              }
+                              return null;
+                            },
+                            controller: _locationController,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'DESCRIPTION',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextFormField(
+                            maxLines: null,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            textAlign: TextAlign.left,
+                            textAlignVertical: TextAlignVertical.top,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter content';
+                              }
+                              return null;
+                            },
+                             controller: _descriptionController,
+                          ),
+                          const SizedBox(height: 16.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                final project = Project(
+                                  name: _nameController.text,
+                                  location: _locationController.text,
+                                  description: _descriptionController.text,
+                                );
+                                _addProject(project);
+                              }
+                            },
+                            child: const Text('Agregar proyecto'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ))));
   }
 }
