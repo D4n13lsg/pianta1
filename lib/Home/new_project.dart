@@ -516,7 +516,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             maxLines: null,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(12, 16, 12, 16),
                               hintStyle: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -544,7 +545,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             maxLines: null,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(12, 16, 12, 16),
                               hintStyle: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -572,7 +574,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             maxLines: null,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(12, 16, 12, 16),
                               hintStyle: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
@@ -586,7 +589,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                               }
                               return null;
                             },
-                             controller: _descriptionController,
+                            controller: _descriptionController,
                           ),
                           const SizedBox(height: 16.0),
                           ElevatedButton(

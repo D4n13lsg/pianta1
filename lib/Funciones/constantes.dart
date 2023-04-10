@@ -115,6 +115,8 @@ import 'package:pianta/Home/settings.dart';
 import 'package:pianta/Home/templates.dart';
 import 'package:pianta/Home/proyecto.dart';
 
+import '../Home/project_created.dart';
+
 var myDefaultBackground = Colors.white;
 
 // clase creada unicamente para la barra de navegacion
@@ -188,7 +190,7 @@ class _NavigationState extends State<Navigation> {
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
-              children: const [Proyectos(), Templates(), Settings()],
+              children: const [Proyectos(), Templates(), Settings(),],
             ),
           )
         ],

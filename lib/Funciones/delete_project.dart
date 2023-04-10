@@ -3,8 +3,7 @@ import 'package:pianta/Home/Home.dart';
 import 'package:pianta/Home/proyecto.dart';
 
 
-
-/*class DeleteProject extends StatefulWidget {
+class DeleteProject extends StatefulWidget {
   const DeleteProject({Key? key}) : super(key: key);
 
   @override
@@ -72,5 +71,4 @@ class _DeleteProjectState extends State<DeleteProject> {
     );
   }
 }
- */
 

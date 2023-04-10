@@ -1,5 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pianta/Home/Home.dart';
+import 'package:http/http.dart' as http;
+
+/*class Project {
+  final String name;
+  final String sensor;
+  final String location;
+
+  Project({
+    required this.name,
+    required this.location,
+    required this.sensor,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'location': location,
+      'description': sensor,
+    };
+  }
+}
 
 class CreateTemplate extends StatefulWidget {
   const CreateTemplate({Key? key}) : super(key: key);
@@ -10,6 +33,39 @@ class CreateTemplate extends StatefulWidget {
 
 // ignore: camel_case_types
 class _CreateTemplateState extends State<CreateTemplate> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _sensorController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _locationController.dispose();
+    _sensorController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _addProject(Project project) async {
+    final url = Uri.parse('http://127.0.0.1:8000/user/template/');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(project.toMap());
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 201) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al agregar el proyecto'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+
   List<String> listaDeOpciones = <String>["ESP 32","ESP 8266","3",];
   List<String> listaDeConexion = <String>["WiFi","Ethernet","USB",];
 
@@ -184,5 +240,4 @@ class _CreateTemplateState extends State<CreateTemplate> {
     );
   }
 }
-
-
+ */

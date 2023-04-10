@@ -1,8 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:pianta/Funciones/constantes.dart';
-import 'package:pianta/Home/proyecto.dart';
+import 'package:flutter/services.dart';
 import 'package:pianta/Home/Home.dart';
-
 
 class ProjectCreated extends StatefulWidget {
   const ProjectCreated({Key? key}) : super(key: key);
@@ -12,6 +11,23 @@ class ProjectCreated extends StatefulWidget {
 }
 
 class _ProjectCreatedState extends State<ProjectCreated> {
+
+  String _projectId = '';
+  List<Widget> _cards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _projectId = generateRandomId();
+  }
+
+  String generateRandomId() {
+    // Aquí puedes implementar la lógica para generar un ID aleatorio
+    // por ejemplo, utilizando la librería 'random'
+    return Random().nextInt(10000).toString();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

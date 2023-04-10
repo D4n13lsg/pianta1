@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:pianta/Home/create_templete.dart';
 
 //clase creada para la pantalla donde aparecen los templates
@@ -111,3 +111,191 @@ class _TemplatesState extends State<Templates> {
     ));
   }
 }
+*/
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'Home.dart';
+import 'new_project.dart';
+
+//el Project es lo que esta en la api
+class Project {
+  int id;
+  final String name;
+  int sensor;
+  final String location;
+
+  Project({
+    required this.id,
+    required this.name,
+    required this.sensor,
+    required this.location,
+  });
+
+  factory Project.fromJson(Map<String, dynamic> json) {
+    return Project(
+      id: json['id'],
+      name: json['name'] ,
+      sensor : json['sensor'],
+      location: json['location'],
+    );
+  }
+}
+
+
+List<Project> projects = [];
+
+class Templates extends StatefulWidget {
+  const Templates({Key? key}) : super(key: key);
+
+  @override
+  State<Templates> createState() => _TemplatesState();
+}
+
+class _TemplatesState extends State<Templates> {
+  late Timer timer;
+  List<Project> projects = [];
+  late Future<List<Project>> futureProjects;
+  final projectListKey = GlobalKey<_TemplatesState>();
+  late String idrandomValue; // nuevo
+
+  @override
+  void initState() {
+    super.initState();
+    futureProjects = fetchProjects();
+    idrandomValue = "1";
+  }
+
+//esto es para mostrar la card
+  Future<List<Project>> fetchProjects() async {
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:8000/user/template/'));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      final List<Project> projects =
+          jsonList.map((json) => Project.fromJson(json)).toList();
+      //esto refresca el proyecto para ver los cambios
+      await refreshProjects();
+      return projects;
+    } else {
+      throw Exception('Failed to load project list');
+    }
+  }
+
+  Future<void> refreshProjects() async {
+    setState(() {
+      futureProjects = fetchProjects();
+    });
+  }
+  //esto es para meter el id para el guardar un proyecto
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(1.0),
+            child: Divider(
+              color: Colors.black26, //color of divider
+              height: 4, //height spacing of divider
+              thickness: 1, //thickness of divier line
+              indent: 15, //spacing at the start of divider
+              endIndent: 0,
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          backgroundColor:
+              Colors.transparent, // establecer el fondo transparente
+          elevation: 0,
+          title: const Text(
+            'Proyecto',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black),
+          ),
+          actions: [
+            Row(
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      primary: Color.fromRGBO(0, 191, 174, 1)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddProjectScreen()),
+                    );
+                  },
+                  child: Row(
+                    children: const [
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "+New Project",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ],
+        ),
+        key: projectListKey,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              futureProjects = fetchProjects();
+            });
+          },
+          child: FutureBuilder<List<Project>>(
+            future: futureProjects,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final projects = snapshot.data!;
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: MediaQuery.of(context).size.width > 1200
+                        ? 5
+                        : MediaQuery.of(context).size.width > 800
+                            ? 4
+                            : MediaQuery.of(context).size.width > 600
+                                ? 3
+                                : 2,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: projects.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final project = projects[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(project.name),
+                      ),
+                    );
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              // By default, show a loading spinner
+              return CircularProgressIndicator();
+            },
+          ),
+        ));
+  }
+}
+

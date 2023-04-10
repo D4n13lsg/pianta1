@@ -74,17 +74,6 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                       TextFormField(
-                        validator: (valor) {
-                          String pattern =
-                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                          RegExp regExp = new RegExp(pattern);
-                          if (valor!.length == 0) {
-                            return 'Plase input your email';
-                          } else if (!regExp.hasMatch(valor)) {
-                            return 'your email is not valid';
-                          }
-                          return null;
-                        },
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
                           border: OutlineInputBorder(),
@@ -107,19 +96,6 @@ class _LoginState extends State<Login> {
                       //este textfromfile sirve para dejar ver la contraseña del usuario
                       TextFormField(
                         //validacion email
-                        validator: (valor) {
-                          RegExp regex = RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                          if (valor!.isEmpty) {
-                            return 'A password is required to log in';
-                          } else if (valor!.length < 8) {
-                            return 'your password is too short it must have at least 8 characters';
-                          } else if (valor?.trim()?.isEmpty ?? true) {
-                            return 'your password must have digits';
-                          }
-                          return null;
-                        },
-
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.lock),
                             border: OutlineInputBorder(),
