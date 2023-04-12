@@ -131,7 +131,11 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   // variable int para instanciar la seleccion de las paginas a navegar
   int _selectedIndex = 0;
-  List<IconData> icons = [    Icons.search,    Icons.more_horiz,    Icons.settings_outlined  ];
+  List<IconData> icons = [
+    Icons.search,
+    Icons.more_horiz,
+    Icons.settings_outlined
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +194,7 @@ class _NavigationState extends State<Navigation> {
           Expanded(
             child: IndexedStack(
               index: _selectedIndex,
-              children: const [Proyectos(), Templates(), Settings(),],
+              children: const [Proyectos(), Templates(), Settings()],
             ),
           )
         ],
@@ -201,5 +205,3 @@ class _NavigationState extends State<Navigation> {
 
 // variable que contiene la clase y los metodos que tendra la barra de navegación para llamarla en otras clases
 var myNav = const Navigation(title: 'Barra de Navegación');
-
-

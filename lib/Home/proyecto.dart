@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pianta/Home/project_created.dart';
 import 'package:pianta/MyDevices/My_Devices.dart';
 
 import 'Home.dart';
@@ -37,6 +36,7 @@ class Project {
 }
 
 List<Project> projects = [];
+
 
 class Proyectos extends StatefulWidget {
   const Proyectos({Key? key}) : super(key: key);

@@ -118,15 +118,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import 'Home.dart';
-import 'new_project.dart';
+import 'create_templete.dart';
 
 //el Project es lo que esta en la api
 class Project {
   int id;
   final String name;
-  int sensor;
+  final String sensor;
   final String location;
 
   Project({
@@ -139,13 +137,12 @@ class Project {
   factory Project.fromJson(Map<String, dynamic> json) {
     return Project(
       id: json['id'],
-      name: json['name'] ,
-      sensor : json['sensor'],
-      location: json['location'],
+      name: json['name'],
+      sensor: json['sensor'],
+      location: json['descripcion'],
     );
   }
 }
-
 
 List<Project> projects = [];
 
@@ -157,6 +154,7 @@ class Templates extends StatefulWidget {
 }
 
 class _TemplatesState extends State<Templates> {
+  late final VoidCallback onDelete;
   late Timer timer;
   List<Project> projects = [];
   late Future<List<Project>> futureProjects;
@@ -212,7 +210,7 @@ class _TemplatesState extends State<Templates> {
               Colors.transparent, // establecer el fondo transparente
           elevation: 0,
           title: const Text(
-            'Proyecto',
+            'Template',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black),
           ),
@@ -226,12 +224,12 @@ class _TemplatesState extends State<Templates> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      primary: Color.fromRGBO(0, 191, 174, 1)),
+                      primary: const Color.fromRGBO(0, 191, 174, 1)),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddProjectScreen()),
+                          builder: (context) => const CreateTemplate()),
                     );
                   },
                   child: Row(
@@ -240,7 +238,7 @@ class _TemplatesState extends State<Templates> {
                         width: 5,
                       ),
                       Text(
-                        "+New Project",
+                        "+New Template",
                         style: TextStyle(
                           fontSize: 15,
                         ),
@@ -284,7 +282,82 @@ class _TemplatesState extends State<Templates> {
                     return Card(
                       child: ListTile(
                         title: Text(project.name),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('delete template'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this template?'),
+                                  actions: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all<
+                                                Color>(
+                                              Colors.red,
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            Navigator.of(context).pop();
+                                            final response = await http.delete(
+                                                Uri.parse(
+                                                    'http://127.0.0.1:8000/user/template/${project.id}/'));
+                                            if (response.statusCode == 204) {
+                                              await refreshProjects();
+                                            } else {
+                                              // Mostrar un mensaje de error si no se pudo eliminar el proyecto
+                                            }
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                              const Color.fromRGBO(
+                                                  0, 191, 174, 1),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        onTap: () {
+                          // Navigate to project details screen
+                        },
                       ),
+
                     );
                   },
                 );
@@ -292,10 +365,12 @@ class _TemplatesState extends State<Templates> {
                 return Text("${snapshot.error}");
               }
               // By default, show a loading spinner
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
+
             },
+
           ),
+
         ));
   }
 }
-

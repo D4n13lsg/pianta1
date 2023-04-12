@@ -16,6 +16,7 @@ class _NewDeviceState extends State<NewDevice> {
   final _locationController = TextEditingController();
   String? _selectedTemplate;
   List<dynamic> _templates = [];
+  List<dynamic> _devices = [];
   String? _deviceName;
   String? _location;
 
@@ -23,7 +24,9 @@ class _NewDeviceState extends State<NewDevice> {
   void initState() {
     super.initState();
     _getTemplates();
+
   }
+
 
   Future<void> _getTemplates() async {
     final url = Uri.parse('http://127.0.0.1:8000/user/template/');
@@ -45,6 +48,19 @@ class _NewDeviceState extends State<NewDevice> {
     super.dispose();
   }
 
+  Future<void> _getDevices() async {
+    final url = Uri.parse('http://127.0.0.1:8000/user/devices/');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _devices = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Failed to load devices');
+    }
+  }
+
   void _saveDevice() async {
     if (_deviceNameController.text.isNotEmpty) {
       final url = Uri.parse('http://127.0.0.1:8000/user/devices/');
@@ -53,8 +69,8 @@ class _NewDeviceState extends State<NewDevice> {
 
       if (_selectedTemplate != null) {
         // Busca el template seleccionado en la lista de templates para obtener su ID
-        final selectedTemplate = _templates.firstWhere((
-            template) => template['name'] == _selectedTemplate);
+        final selectedTemplate = _templates
+            .firstWhere((template) => template['name'] == _selectedTemplate);
         templateId = selectedTemplate['id'].toString();
       }
 
@@ -70,7 +86,10 @@ class _NewDeviceState extends State<NewDevice> {
           _location = _locationController.text;
         });
         Navigator.of(context).pop(true);
-      } else {
+
+        // Actualiza la lista de dispositivos después de guardar el dispositivo
+        await _getDevices();
+      }else {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -92,132 +111,162 @@ class _NewDeviceState extends State<NewDevice> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_deviceName ?? 'New Device'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.location_on),
-            onPressed: () {
-              // Muestra un cuadro de diálogo para ingresar la ubicación
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  final locationController = TextEditingController();
+        body: Center(
+          child: Card(
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(50),
+              child: SizedBox(
+                width: 900,
+                height: 500,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      const Text(
+                        'NEW DEVICE',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24.0,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Create new device by filling in the form below',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'TEMPLATE',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0, // Se ha cambiado el tamaño a 14.0
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Choose template',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: _selectedTemplate,
+                        items: _templates
+                            .map((template) => DropdownMenuItem<String>(
+                          value: template['name'],
+                          child: Text(template['name']),
+                        ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedTemplate = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a device template';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'DEVICE NAME',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0, // Se ha cambiado el tamaño a 14.0
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _deviceNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Device Name',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a device name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'LOCATION',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0, // Se ha cambiado el tamaño a 14.0
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _locationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Location',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a location';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      /*ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _saveDevice();
+                      }
+                    },
+                    child: const Text('Save'),
+                  ),
 
-                  return AlertDialog(
-                    title: const Text('Enter Location'),
-                    content: TextFormField(
-                      controller: locationController,
-                      decoration: const InputDecoration(
-                        labelText: 'Location',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a location';
-                        }
-                        return null;
-                      },
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          final location = locationController.text;
-                          // Guarda la ubicación en la API o en una variable de estado
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Save'),
+                   */
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                            ),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(width: 16), // Agregar espacio horizontal
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _saveDevice();
+                              }
+                            },
+                            child: const Text('Save'),
+                          ),
+                        ],
                       ),
                     ],
-                  );
-                },
-              );
-            },
+                  ),
+                ),
+              ),
+            ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextFormField(
-                controller: _deviceNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Device Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a device name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _locationController,
-                decoration: const InputDecoration(
-                  labelText: 'Location',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a location';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Device Template',
-                  border: OutlineInputBorder(),
-                ),
-                value: _selectedTemplate,
-                items: _templates
-                    .map((template) =>
-                    DropdownMenuItem<String>(
-                      value: template['name'],
-                      child: Text(template['name']),
-                    ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedTemplate = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please select a device template';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _saveDevice();
-                  }
-                },
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+        ));
   }
 }

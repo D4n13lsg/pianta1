@@ -506,6 +506,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
+                            'CREATE NEW PROJECT',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24.0,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
                             'Nombre',
                             style: TextStyle(
                               fontSize: 16,
@@ -592,7 +600,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             controller: _descriptionController,
                           ),
                           const SizedBox(height: 16.0),
-                          ElevatedButton(
+                          /*ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 final project = Project(
@@ -604,6 +612,44 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                               }
                             },
                             child: const Text('Agregar proyecto'),
+                          ),
+                           */
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(width: 16), // Agregar espacio horizontal
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    final project = Project(
+                                      name: _nameController.text,
+                                      location: _locationController.text,
+                                      description: _descriptionController.text,
+                                    );
+                                    _addProject(project);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromRGBO(0, 191, 174, 1),
+                                ),
+                                child: const Text(
+                                  'DONE',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
