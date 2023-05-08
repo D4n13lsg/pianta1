@@ -135,6 +135,7 @@ class _MyDeviceState extends State<MyDevice> {
                                   json
                                       .decode(response.body)
                                       .isNotEmpty) {
+                                // ignore: use_build_context_synchronously
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -152,6 +153,7 @@ class _MyDeviceState extends State<MyDevice> {
                                   },
                                 ).then((value) => _getDevices());
                               } else {
+                                // ignore: use_build_context_synchronously
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {

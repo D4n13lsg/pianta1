@@ -180,18 +180,18 @@ class _TemplatesState extends State<Templates> {
       final List<Project> projects =
           jsonList.map((json) => Project.fromJson(json)).toList();
       //esto refresca el proyecto para ver los cambios
-      await refreshProjects();
+      //await refreshProjects();
       return projects;
     } else {
       throw Exception('Failed to load project list');
     }
   }
 
-  Future<void> refreshProjects() async {
-    setState(() {
-      futureProjects = fetchProjects();
-    });
-  }
+  //Future<void> refreshProjects() async {
+    //setState(() {
+    //  futureProjects = fetchProjects();
+    //});
+ // }
   //esto es para meter el id para el guardar un proyecto
 
   @override
@@ -358,7 +358,7 @@ class _TemplatesState extends State<Templates> {
                                                             if (response
                                                                     .statusCode ==
                                                                 204) {
-                                                              await refreshProjects();
+                                                             // await refreshProjects();
                                                             } else {
                                                               // Mostrar un mensaje de error si no se pudo eliminar el proyecto
                                                             }
@@ -486,7 +486,7 @@ class Dashboard extends StatelessWidget {
                                   // Acción a realizar al presionar el botón "Info"
                                 },
                                 child: const Text('Info',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 24, color: Colors.black)),
                               ),
                               TextButton(
@@ -502,7 +502,7 @@ class Dashboard extends StatelessWidget {
                                 },
                                 child: const Text(
                                   'Web Dashboard',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 24, color: Colors.black),
                                 ),
                               ),

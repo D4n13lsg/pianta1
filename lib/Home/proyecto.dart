@@ -79,7 +79,7 @@ class _ProyectosState extends State<Proyectos> {
     );
     if (response.statusCode == 204) {
       print('Project deleted successfully');
-      await refreshProjects();
+      //await refreshProjects();
     } else {
       throw Exception('Failed to delete project');
     }
@@ -109,7 +109,7 @@ class _ProyectosState extends State<Proyectos> {
       setState(() {
         projects.add(newProject);
       });
-      await refreshProjects();
+      //await refreshProjects();
     } else {
       throw Exception('Failed to load project');
     }
@@ -129,18 +129,18 @@ class _ProyectosState extends State<Proyectos> {
       final List<Project> projects =
           jsonList.map((json) => Project.fromJson(json)).toList();
       //esto refresca el proyecto para ver los cambios
-      await refreshProjects();
+      //await refreshProjects();
       return projects;
     } else {
       throw Exception('Failed to load project list');
     }
   }
 
-  Future<void> refreshProjects() async {
-    setState(() {
-      futureProjects = fetchProjects();
-    });
-  }
+ // Future<void> refreshProjects() async {
+    //setState(() {
+    //  futureProjects = fetchProjects();
+    //});
+  //}
   //esto es para meter el id para el guardar un proyecto
 
   @override

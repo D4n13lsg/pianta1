@@ -431,7 +431,9 @@ class _WebDashboardState extends State<WebDashboard>
                                 onPressed: () {
                                   // Acción a realizar al presionar el botón "Info"
                                 },
-                                child: const Text('Info',style: const TextStyle(fontSize: 24,color: Colors.black)),
+                                child: const Text('Info',
+                                    style: const TextStyle(
+                                        fontSize: 24, color: Colors.black)),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -439,11 +441,16 @@ class _WebDashboardState extends State<WebDashboard>
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const WebDashboard(),
+                                      builder: (context) =>
+                                          const WebDashboard(),
                                     ),
                                   );
                                 },
-                                child: const Text('Web Dashboard',style: const TextStyle(fontSize: 24,color: Colors.black),),
+                                child: const Text(
+                                  'Web Dashboard',
+                                  style: const TextStyle(
+                                      fontSize: 24, color: Colors.black),
+                                ),
                               ),
                             ],
                           ),
@@ -466,7 +473,6 @@ class _WebDashboardState extends State<WebDashboard>
                     ),
                   ],
                 ),
-
                 const Divider(
                   color: Colors.black26,
                   //color of divider
@@ -513,17 +519,9 @@ class _WebDashboardState extends State<WebDashboard>
                                       width: 300,
                                       height: 300,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          if (_animationController.value ==
-                                              maxProgress) {
-                                            _animationController.reverse();
-                                          } else {
-                                            _animationController.forward();
-                                          }
-                                        },
-                                        child: Center(
+                                        child: const Center(
                                           child: Text(
-                                            '${_animation.value.toInt()} °C',
+                                            '0 °C',
                                             style: TextStyle(fontSize: 50),
                                           ),
                                         ),

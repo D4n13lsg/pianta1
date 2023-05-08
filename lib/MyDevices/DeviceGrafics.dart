@@ -144,7 +144,6 @@ class _DeviceGraficsState extends State<DeviceGrafics>
         setState(() {
           apiData = data;
         });
-        print('v12 value: ${apiData![0]['v12']}');
       } else {
         // Handle the error
       }
@@ -152,6 +151,8 @@ class _DeviceGraficsState extends State<DeviceGrafics>
       // Handle the error
     }
   }
+
+
 
   Future<List<SensorData>> fetchDevices() async {
     final response = await http
@@ -166,7 +167,6 @@ class _DeviceGraficsState extends State<DeviceGrafics>
         device = devices;
         selectedDevice = devices.isNotEmpty ? devices[0] : null;
       });
-      print('Sensor data: ${devices[0].v12}');
       return devices;
     } else {
       throw Exception('Failed to load devices');
@@ -176,7 +176,7 @@ class _DeviceGraficsState extends State<DeviceGrafics>
   @override
   void initState() {
     _animationController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 3000));
+        vsync: this, duration: const Duration(milliseconds: 3000));
     _animation =
         Tween<double>(begin: 0, end: maxProgress).animate(_animationController)
           ..addListener(() {
@@ -187,11 +187,12 @@ class _DeviceGraficsState extends State<DeviceGrafics>
     super.initState();
 
     // Programamos la actualización cada 5 segundos
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    /*Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
         _fetchDevicesFuture = fetchDevices();
       });
-    });
+    })*/
+    ;
   }
 
   @override
@@ -215,7 +216,7 @@ class _DeviceGraficsState extends State<DeviceGrafics>
                       const Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(
-                          'Name Device Grafics',
+                          'Name',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
@@ -252,7 +253,7 @@ class _DeviceGraficsState extends State<DeviceGrafics>
                             ),
 
                             */
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Expanded(
                               child: Row(
                                 mainAxisAlignment:
@@ -261,7 +262,7 @@ class _DeviceGraficsState extends State<DeviceGrafics>
                                   CustomPaint(
                                     painter: CircularGraphicsPainter(
                                         lastData?.v12 ?? 0.0),
-                                    child: Container(
+                                    child: SizedBox(
                                       width: 300,
                                       height: 300,
                                       child: GestureDetector(
@@ -275,7 +276,7 @@ class _DeviceGraficsState extends State<DeviceGrafics>
                                         },
                                         child: Center(
                                           child: lastData == null
-                                              ? Text('No data available')
+                                              ? const Text('No data available')
                                               : Text('${lastData.v12} °C',
                                                   style: const TextStyle(
                                                       fontSize: 50)),
@@ -327,9 +328,18 @@ class CircularGraphicsPainter extends CustomPainter {
 
     Paint animationArc = Paint()
       ..strokeWidth = 5
-      ..color = Colors.purpleAccent
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
+
+    if (currentProgress > 85) {
+      animationArc.color = Colors.red;
+    } else if (currentProgress > 75) {
+      animationArc.color = Colors.orange;
+    } else if (currentProgress > 50) {
+      animationArc.color = Colors.yellow;
+    } else {
+      animationArc.color = Colors.blue;
+    }
 
     double angle = 2 * pi * (currentProgress / 100);
     canvas.drawArc(Rect.fromCircle(center: center, radius: radius), pi / 2,
