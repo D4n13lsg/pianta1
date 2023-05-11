@@ -66,6 +66,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:http/http.dart' as http;
 import 'dart:math';
 
+import '../Funciones/constantes.dart';
+
 // ignore: camel_case_types
 //grafica circular
 
@@ -121,12 +123,10 @@ class DeviceGrafics extends StatefulWidget {
 
 class _DeviceGraficsState extends State<DeviceGrafics>
     with SingleTickerProviderStateMixin {
-  //firebase
-
+  Device? selectedDevices;
+  //late List<Device> devices;
   bool isLoading = false;
-
   //final FirebaseDatabase _database = FirebaseDatabase.instance;
-
   late AnimationController _animationController;
   late Animation<double> _animation;
   final maxProgress = 100.0;
@@ -152,7 +152,11 @@ class _DeviceGraficsState extends State<DeviceGrafics>
     }
   }
 
-
+  void handleDeviceSelection(Device device) {
+    setState(() {
+      selectedDevices = device;
+    });
+  }
 
   Future<List<SensorData>> fetchDevices() async {
     final response = await http
@@ -205,105 +209,102 @@ class _DeviceGraficsState extends State<DeviceGrafics>
   Widget build(BuildContext context) {
     final lastData = device.isNotEmpty ? device.last : null;
     return SafeArea(
-      child: Scaffold(
-        body: Row(
-          children: [
+        child: Scaffold(
+            body: Container(
+                child: Row(children: [
+      const SizedBox(
+        width: 100,
+        child: Navigation(title: 'nav', selectedIndex: 0),
+      ),
+      Expanded(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Graphics',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  ),
+                ), //fin modulo
+                SizedBox(height: 35),
+              ],
+            ),
+            const Divider(
+              color: Colors.black26,
+              height: 2,
+              thickness: 1,
+              indent: 15,
+              endIndent: 0,
+            ),
             Expanded(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Name',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                              color: Colors.black),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(
-                              context, 'Valor enviado a la página anterior');
-                        },
-                        icon: const Icon(Icons.exit_to_app),
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    color: Colors.black26,
-                    height: 2,
-                    thickness: 1,
-                    indent: 15,
-                    endIndent: 0,
-                  ),
-                  Expanded(
-                    child: Card(
-                      margin: const EdgeInsets.all(16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            /* const ListTile(
-                              leading: Icon(Icons.person_2_outlined, size: 100),
-                              title: Text('Device Name',
-                                  style: TextStyle(fontSize: 40)),
-                            ),
-
-                            */
-                            const SizedBox(height: 16),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  CustomPaint(
-                                    painter: CircularGraphicsPainter(
-                                        lastData?.v12 ?? 0.0),
-                                    child: SizedBox(
-                                      width: 300,
-                                      height: 300,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (_animationController.value ==
-                                              maxProgress) {
-                                            _animationController.reverse();
-                                          } else {
-                                            _animationController.forward();
-                                          }
-                                        },
-                                        child: Center(
-                                          child: lastData == null
-                                              ? const Text('No data available')
-                                              : Text('${lastData.v12} °C',
-                                                  style: const TextStyle(
-                                                      fontSize: 50)),
-                                        ),
-                                      ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    const ListTile(
+                      leading: Icon(Icons.person_2_outlined, size: 100),
+                    ),
+                    Text(
+                      selectedDevice != null ? selectedDevice!.name : 'No device selected',
+                      style: TextStyle(fontSize: 40),
+                    ),
+                    SizedBox(
+                      height: 400,
+                      width: 950,
+                      child: Card(
+                        elevation: 4,
+                        child: Container(
+                          padding: EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CustomPaint(
+                                painter: CircularGraphicsPainter(
+                                    lastData?.v12 ?? 0.0),
+                                child: SizedBox(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (_animationController.value ==
+                                          maxProgress) {
+                                        _animationController.reverse();
+                                      } else {
+                                        _animationController.forward();
+                                      }
+                                    },
+                                    child: Center(
+                                      child: lastData == null
+                                          ? const Text('No data available')
+                                          : Text(
+                                              '${lastData.v12} °C',
+                                              style:
+                                                  const TextStyle(fontSize: 50),
+                                            ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 300.0,
-                                    width: 300.0,
-                                    child: Linea_Graphics(),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(
+                                height: 300.0,
+                                width: 300.0,
+                                child: Linea_Graphics(),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
+    ]))));
   }
 }
 
@@ -331,11 +332,11 @@ class CircularGraphicsPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    if (currentProgress > 85) {
+    if (currentProgress > 84) {
       animationArc.color = Colors.red;
-    } else if (currentProgress > 75) {
+    } else if (currentProgress > 74) {
       animationArc.color = Colors.orange;
-    } else if (currentProgress > 50) {
+    } else if (currentProgress > 49) {
       animationArc.color = Colors.yellow;
     } else {
       animationArc.color = Colors.blue;
@@ -354,46 +355,52 @@ class CircularGraphicsPainter extends CustomPainter {
 
 //grafica dias. lineal
 class Linea_Graphics extends StatelessWidget {
-  const Linea_Graphics({super.key});
+  const Linea_Graphics({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final data = [
-      Expenses(0, 0),
-      Expenses(0, 0),
-      Expenses(0, 0),
-      Expenses(0, 0),
-      Expenses(0, 0),
-      Expenses(0, 0),
-      Expenses(0, 0),
-    ];
-    final series = [
-      charts.Series(
-        id: 'Expenses',
-        data: data,
-        domainFn: (Expenses expenses, _) => expenses.day,
-        measureFn: (Expenses expenses, _) => expenses.amount,
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        labelAccessorFn: (Expenses expenses, _) =>
-            '${expenses.day}: \$${expenses.amount}',
-      ),
-    ];
-
-    final chart = charts.LineChart(
-      series,
-      animate: true,
-    );
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: chart,
+    return FutureBuilder<List<SensorData>>(
+      future: fetchSensorData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          final series = [
+            charts.Series(
+              id: 'Sensor Data',
+              data: data,
+              domainFn: (SensorData sensorData, _) => sensorData.createdAt,
+              measureFn: (SensorData sensorData, _) => sensorData.v12,
+              colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+              labelAccessorFn: (SensorData sensorData, _) =>
+                  '${sensorData.createdAt}: ${sensorData.v12}',
+            ),
+          ];
+          final chart = charts.TimeSeriesChart(
+            series,
+            animate: true,
+          );
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: chart,
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return const CircularProgressIndicator();
+      },
     );
   }
 }
 
-class Expenses {
-  final int day;
-  final int amount;
-
-  Expenses(this.day, this.amount);
+Future<List<SensorData>> fetchSensorData() async {
+  final response = await http
+      .get(Uri.parse('http://127.0.0.1:8000/user/datos-sensores/v12/'));
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final sensorDataList =
+        List<SensorData>.from(jsonData.map((x) => SensorData.fromJson(x)));
+    return sensorDataList;
+  } else {
+    throw Exception('Failed to load sensor data');
+  }
 }
